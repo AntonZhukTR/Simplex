@@ -5,16 +5,16 @@ Console.WriteLine("Welcome to simplex method console!\n");
 string[] textLines = File.ReadAllLines("Examples/2x2.csv");
 
 Console.WriteLine("Function to optimize:");
-
 Console.WriteLine(BuildFunctionToOptimizeMessage(textLines[0]));
-
 Console.WriteLine();
-
 Console.WriteLine("Conditions:");
 
 for (int i = 2; i < textLines.Length; i++)
 {
-	Console.WriteLine(BuildRestrictionMessage(textLines[i]));
+	string[] coefficients = textLines[i].Split([',']);
+	string leftPart = BuildLeftPartOfRestrictionEquation(coefficients);
+	
+	Console.WriteLine($"{leftPart}+y{i - 1} = {coefficients[coefficients.Length - 1]}");
 }
 
 Console.ReadLine();
@@ -27,8 +27,7 @@ string BuildFunctionToOptimizeMessage(string functionTextLine)
 
 	for (int i = 1; i < coefficients.Length; i++)
 	{
-		string sign = coefficients[i][0] == '-' ? "" : "+";
-		sb.Append($"{sign}{coefficients[i]}*x{i + 1}");
+		sb.Append(BuildCoefficientText(coefficients[i], i));
 	}
 
 	sb.Append(" -> Max");
@@ -36,19 +35,22 @@ string BuildFunctionToOptimizeMessage(string functionTextLine)
 	return sb.ToString();
 }
 
-string BuildRestrictionMessage(string restrictionTextLine)
+string BuildLeftPartOfRestrictionEquation(string[] coefficients)
 {
-	string[] coefficients = restrictionTextLine.Split([',']);
-
 	StringBuilder sb = new();
 
-	for (int i = 0;  i < coefficients.Length - 1; i++)
+	for (int i = 0; i < coefficients.Length - 1; i++)
 	{
-		string sign = coefficients[i][0] == '-' ? "" : "+";
-		sb.Append($"{sign}{coefficients[i]}*x{i + 1}");
+		sb.Append(BuildCoefficientText(coefficients[i], i));
 	}
 
-	sb.Append($" <= {coefficients[coefficients.Length - 1]}");
-
 	return sb.ToString();
+}
+
+string BuildCoefficientText(string coefficient, int index)
+{
+	string sign = coefficient[0] == '-' ? "" : "+";
+	coefficient = $"{sign}{coefficient}*x{index + 1}";
+
+	return coefficient;
 }
