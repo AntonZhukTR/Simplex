@@ -4,8 +4,8 @@ Console.WriteLine("Welcome to simplex method console!\n");
 
 string[] textLines = File.ReadAllLines("Examples/2x2.csv");
 
-Console.WriteLine("Function to optimize:");
-Console.WriteLine(BuildFunctionToOptimizeMessage(textLines[0]));
+Console.WriteLine($"Function to optimize:  {BuildFunctionToOptimizeMessage(textLines[0])}");
+Console.WriteLine($"Function with zero in right part:  {BuildFunctionToOptimizeWithZeroMessage(textLines[0])}");
 Console.WriteLine();
 Console.WriteLine("Conditions:");
 
@@ -35,6 +35,22 @@ string BuildFunctionToOptimizeMessage(string functionTextLine)
 	return sb.ToString();
 }
 
+string BuildFunctionToOptimizeWithZeroMessage(string functionTextLine)
+{
+	string[] coefficients = functionTextLine.Split([',']);
+
+	StringBuilder sb = new($"F ");
+
+	for (int i = 0; i < coefficients.Length; i++)
+	{
+		sb.Append(BuildNegativeCoefficientText(coefficients[i], i));
+	}
+
+	sb.Append(" = 0");
+
+	return sb.ToString();
+}
+
 string BuildLeftPartOfRestrictionEquation(string[] coefficients)
 {
 	StringBuilder sb = new();
@@ -50,6 +66,14 @@ string BuildLeftPartOfRestrictionEquation(string[] coefficients)
 string BuildCoefficientText(string coefficient, int index)
 {
 	string sign = coefficient[0] == '-' ? "" : "+";
+	coefficient = $"{sign}{coefficient}*x{index + 1}";
+
+	return coefficient;
+}
+
+string BuildNegativeCoefficientText(string coefficient, int index)
+{
+	string sign = coefficient[0] == '-' ? "+" : "-";
 	coefficient = $"{sign}{coefficient}*x{index + 1}";
 
 	return coefficient;
