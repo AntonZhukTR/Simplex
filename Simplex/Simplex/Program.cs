@@ -9,12 +9,36 @@ Console.WriteLine($"Function with zero in right part:  {BuildFunctionToOptimizeW
 Console.WriteLine();
 Console.WriteLine("Conditions:");
 
+double[] b = new double[textLines.Length - 1];
+b[textLines.Length - 2] = 0;
+
+double[][] matrix = new double[textLines.Length - 1][];
+
+string[] mainFunctionCoefficients = textLines[0].Split([',']);
+
+matrix[textLines.Length - 2] = new double[2 * mainFunctionCoefficients.Length];
+
+for (int i =  0; i < mainFunctionCoefficients.Length; i++)
+{
+	matrix[textLines.Length - 2][i] =  - Convert.ToDouble(mainFunctionCoefficients[i]);
+}
+
 for (int i = 2; i < textLines.Length; i++)
 {
 	string[] coefficients = textLines[i].Split([',']);
 	string leftPart = BuildLeftPartOfRestrictionEquation(coefficients);
-	
-	Console.WriteLine($"{leftPart}+y{i - 1} = {coefficients[coefficients.Length - 1]}");
+
+	string restriction = coefficients[coefficients.Length - 1];
+	b[i - 2] = Convert.ToDouble(restriction);
+
+
+	matrix[i - 2] = new double[2 * (coefficients.Length - 1)];
+	for (int j = 0; j < coefficients.Length - 1; j++)
+	{
+		matrix[i - 2][j] = Convert.ToDouble(coefficients[j]);
+	}
+
+	Console.WriteLine($"{leftPart}+y{i - 1} = {restriction}");
 }
 
 Console.ReadLine();
