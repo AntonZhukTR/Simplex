@@ -41,29 +41,36 @@ for (int i = 2; i < textLines.Length; i++)
 	Console.WriteLine($"{leftPart}+y{i - 1} = {restriction}");
 }
 
-// algorythm
-// check for optimal plan
-double[] lastRowOfMatrix = matrix[textLines.Length - 2];
+// algorythm beginning
+int[] basis = [mainFunctionCoefficients.Length, mainFunctionCoefficients.Length + 1];
 
-double minimum = lastRowOfMatrix[0];
-int resolvingColumnIndex = 0;
+double[] functionRow = matrix[textLines.Length - 2];
 
-for (int i = 0;i < lastRowOfMatrix.Length; i++)
+(double minimum, int resolvingColumnIndex) = IsOptimalPlan(functionRow);
+
+while (minimum < 0)
 {
-	if (lastRowOfMatrix[i] < minimum)
-	{
-		minimum = lastRowOfMatrix[i];
-		resolvingColumnIndex = i;
-	}
+	// recalculation of main matrix cycle
 }
-
-if (minimum > 0)
-{
-	// plan is optimal, solution is found
-}
-
 
 Console.ReadLine();
+
+(double, int) IsOptimalPlan(double[] function)
+{
+	double minimum = function[0];
+	int resolvingColumnIndex = 0;
+
+	for (int i = 0; i < function.Length; i++)
+	{
+		if (function[i] < minimum)
+		{
+			minimum = function[i];
+			resolvingColumnIndex = i;
+		}
+	}
+
+	return (minimum, resolvingColumnIndex);
+}
 
 string BuildFunctionToOptimizeMessage(string functionTextLine)
 {
