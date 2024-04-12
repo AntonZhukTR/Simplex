@@ -51,9 +51,28 @@ double[] functionRow = matrix[textLines.Length - 2];
 while (minimum < 0)
 {
 	// recalculation of main matrix cycle
+	int resolvingRowIndex = 0;
+	double bMin = b[0];
+
+	for (int i = 0; i < b.Length - 1; i++)
+	{
+		b[i] = b[i] / matrix[i][resolvingColumnIndex];
+		if (b[i] < bMin)
+		{
+			bMin = b[i];
+			resolvingRowIndex = i;
+		}
+	}
+
+	UpdateMainMatrixByResolvingRowAndColumn(resolvingRowIndex, resolvingColumnIndex);
 }
 
 Console.ReadLine();
+
+void UpdateMainMatrixByResolvingRowAndColumn(int resolvingRowIndex, int resolvingColumnIndex)
+{
+	throw new NotImplementedException();
+}
 
 (double, int) IsOptimalPlan(double[] function)
 {
