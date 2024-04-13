@@ -52,8 +52,12 @@ double[] functionRow = matrix[textLines.Length - 2];
 
 (double minimum, int resolvingColumnIndex) = IsOptimalPlan(functionRow);
 
+int iteration = 0;
+
 while (minimum < 0)
 {
+	iteration++;
+
 	// recalculation of main matrix cycle
 	int resolvingRowIndex = 0;
 	double bMin = b[0];
@@ -61,14 +65,14 @@ while (minimum < 0)
 	for (int i = 0; i < b.Length - 1; i++)
 	{
 		b[i] = b[i] / matrix[i][resolvingColumnIndex];
-		if (b[i] < bMin)
+		if (b[i] < bMin && b[i] > 0)
 		{
 			bMin = b[i];
 			resolvingRowIndex = i;
 		}
 	}
 
-	UpdateMainMatrixByResolvingRowAndColumn(matrix, b, resolvingRowIndex, resolvingColumnIndex);
+	double[][] newMatrix = UpdateMainMatrixByResolvingRowAndColumn(matrix, b, resolvingRowIndex, resolvingColumnIndex);
 
 	double[] resolvingRow = matrix[resolvingRowIndex];
 
@@ -83,7 +87,12 @@ while (minimum < 0)
 		}
 	}
 
-	(minimum, resolvingColumnIndex) = IsOptimalPlan(functionRow);
+	// replace matrix with recalculated values
+	matrix = newMatrix;
+
+	double[] newFunctionRow = matrix[textLines.Length - 2];
+
+	(minimum, resolvingColumnIndex) = IsOptimalPlan(newFunctionRow);
 }
 
 Console.ReadLine();
@@ -119,7 +128,7 @@ int GetBasisIndexToExclude(int[] basis, double[] resolvingRow)
 	return basisItemToExclude;
 }
 
-void UpdateMainMatrixByResolvingRowAndColumn(double[][] matrix, double[] b, int resolvingRowIndex, int resolvingColumnIndex)
+double[][] UpdateMainMatrixByResolvingRowAndColumn(double[][] matrix, double[] b, int resolvingRowIndex, int resolvingColumnIndex)
 {
 	double[][] newMatrix = new double[matrix.Length][];
 
@@ -148,6 +157,8 @@ void UpdateMainMatrixByResolvingRowAndColumn(double[][] matrix, double[] b, int 
 
 		b[i] = b[resolvingRowIndex] * coefficientToApplyToRow + b[i];
 	}
+
+	return newMatrix;
 }
 
 (double, int) IsOptimalPlan(double[] function)
