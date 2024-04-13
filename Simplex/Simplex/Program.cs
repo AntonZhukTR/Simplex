@@ -70,12 +70,25 @@ while (minimum < 0)
 
 	UpdateMainMatrixByResolvingRowAndColumn(matrix, b, resolvingRowIndex, resolvingColumnIndex);
 
+	double[] resolvingRow = matrix[resolvingRowIndex];
 
+	int basisIndexToExclude = GetBasisIndexToExclude(basis, resolvingRow);
+
+	// replace basis indices
+	for (int i = 0; i < basis.Length; i++)
+	{
+		if (basis[i] ==  basisIndexToExclude)
+		{
+			basis[i] = resolvingColumnIndex;
+		}
+	}
 
 	(minimum, resolvingColumnIndex) = IsOptimalPlan(functionRow);
 }
 
 Console.ReadLine();
+
+
 
 
 
@@ -88,6 +101,22 @@ int[] InitializeBasis(int length)
 	}
 
 	return basis;
+}
+
+int GetBasisIndexToExclude(int[] basis, double[] resolvingRow)
+{
+	int basisItemToExclude = 0;
+
+	for (int i = basis.Length; i < resolvingRow.Length; i++)
+	{
+		if (resolvingRow[i] > 0)
+		{
+			basisItemToExclude = i;
+			break;
+		}
+	}
+
+	return basisItemToExclude;
 }
 
 void UpdateMainMatrixByResolvingRowAndColumn(double[][] matrix, double[] b, int resolvingRowIndex, int resolvingColumnIndex)
