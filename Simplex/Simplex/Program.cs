@@ -33,6 +33,10 @@ for (int i = 2; i < textLines.Length; i++)
 
 
 	matrix[i - 2] = new double[2 * (coefficients.Length - 1)];
+
+	// populate 1 for initial basis
+	matrix[i - 2][(coefficients.Length - 1) + (i - 2)] = 1;
+
 	for (int j = 0; j < coefficients.Length - 1; j++)
 	{
 		matrix[i - 2][j] = Convert.ToDouble(coefficients[j]);
@@ -64,7 +68,11 @@ while (minimum < 0)
 		}
 	}
 
-	UpdateMainMatrixByResolvingRowAndColumn(resolvingRowIndex, resolvingColumnIndex);
+	UpdateMainMatrixByResolvingRowAndColumn(matrix, b, resolvingRowIndex, resolvingColumnIndex);
+
+
+
+	(minimum, resolvingColumnIndex) = IsOptimalPlan(functionRow);
 }
 
 Console.ReadLine();
@@ -82,9 +90,35 @@ int[] InitializeBasis(int length)
 	return basis;
 }
 
-void UpdateMainMatrixByResolvingRowAndColumn(int resolvingRowIndex, int resolvingColumnIndex)
+void UpdateMainMatrixByResolvingRowAndColumn(double[][] matrix, double[] b, int resolvingRowIndex, int resolvingColumnIndex)
 {
-	throw new NotImplementedException();
+	double[][] newMatrix = new double[matrix.Length][];
+
+	// resolving row stays the same
+	newMatrix[resolvingRowIndex] = new double[matrix[resolvingRowIndex].Length];
+	matrix[resolvingRowIndex].CopyTo(newMatrix[resolvingRowIndex], 0);
+
+	//
+	double resolvingElementValue = matrix[resolvingRowIndex][resolvingColumnIndex];
+
+	// make 0 for all resolving column items except resolving element at resolving row index
+
+	for (int i = 0; i < newMatrix.Length; i++)
+	{
+		if (i == resolvingRowIndex) { continue; }
+		newMatrix[i] = new double[matrix[i].Length];
+
+		// calculate coefficient to make all column items 0 except resolving element
+		double coefficientToApplyToRow = - (matrix[i][resolvingColumnIndex] / resolvingElementValue);
+
+		for (int j = 0; j < newMatrix[i].Length; j++)
+		{
+			if (j == resolvingColumnIndex) { continue; };
+			newMatrix[i][j] = matrix[resolvingRowIndex][j] * coefficientToApplyToRow + matrix[i][j];
+		}
+
+		b[i] = b[resolvingRowIndex] * coefficientToApplyToRow + b[i];
+	}
 }
 
 (double, int) IsOptimalPlan(double[] function)
