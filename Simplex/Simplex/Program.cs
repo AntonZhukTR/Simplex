@@ -42,7 +42,7 @@ for (int i = 2; i < textLines.Length; i++)
 }
 
 // algorythm beginning
-int[] basis = [mainFunctionCoefficients.Length, mainFunctionCoefficients.Length + 1];
+int[] basis = InitializeBasis(mainFunctionCoefficients.Length);
 
 double[] functionRow = matrix[textLines.Length - 2];
 
@@ -68,6 +68,19 @@ while (minimum < 0)
 }
 
 Console.ReadLine();
+
+
+
+int[] InitializeBasis(int length)
+{
+	int[] basis = new int[length];
+	for (int i = 0; i < length; i++)
+	{
+		basis[i] = length + i;
+	}
+
+	return basis;
+}
 
 void UpdateMainMatrixByResolvingRowAndColumn(int resolvingRowIndex, int resolvingColumnIndex)
 {
