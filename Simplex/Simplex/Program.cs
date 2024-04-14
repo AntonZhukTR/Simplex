@@ -64,8 +64,8 @@ while (minimum < 0)
 
 	for (int i = 0; i < b.Length - 1; i++)
 	{
-		b[i] = b[i] / matrix[i][resolvingColumnIndex];
-		if (b[i] < bMin && b[i] > 0)
+		double minTemp = b[i] / matrix[i][resolvingColumnIndex];
+		if (minTemp < bMin && minTemp > 0)
 		{
 			bMin = b[i];
 			resolvingRowIndex = i;
@@ -151,8 +151,8 @@ double[][] UpdateMainMatrixByResolvingRowAndColumn(double[][] matrix, double[] b
 
 		for (int j = 0; j < newMatrix[i].Length; j++)
 		{
-			if (j == resolvingColumnIndex) { continue; };
-			newMatrix[i][j] = matrix[resolvingRowIndex][j] * coefficientToApplyToRow + matrix[i][j];
+			//if (j == resolvingColumnIndex) { continue; };
+			newMatrix[i][j] = matrix[i][j] + coefficientToApplyToRow * matrix[resolvingRowIndex][j];
 		}
 
 		b[i] = b[resolvingRowIndex] * coefficientToApplyToRow + b[i];
