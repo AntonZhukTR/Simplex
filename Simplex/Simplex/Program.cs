@@ -95,10 +95,35 @@ while (minimum < 0)
 	(minimum, resolvingColumnIndex) = IsOptimalPlan(newFunctionRow);
 }
 
+double[] results = new double[basis.Length];
+
+// form the result
+for (int i = 0; i < matrix.Length - 1; i++)
+{
+	for (int j = 0; j < basis.Length; j++)
+	{
+		if (matrix[i][basis[j]] > 0)
+		{
+			results[i] = b[i] / matrix[i][basis[j]];
+		}
+	}
+}
+
+double maximumFunctionValue = b[b.Length - 1];
+
+Console.WriteLine();
+Console.WriteLine("Maximum function value and coefficients for it:");
+
+Console.WriteLine(BuildResultsText(results, maximumFunctionValue));
+
 Console.ReadLine();
 
 
 
+string BuildResultsText(double[] results, double maximumFunctionValue)
+{
+	return $"F({string.Join(',', results)}) = {maximumFunctionValue}";
+}
 
 
 int[] InitializeBasis(int length)
@@ -151,7 +176,6 @@ double[][] UpdateMainMatrixByResolvingRowAndColumn(double[][] matrix, double[] b
 
 		for (int j = 0; j < newMatrix[i].Length; j++)
 		{
-			//if (j == resolvingColumnIndex) { continue; };
 			newMatrix[i][j] = matrix[i][j] + coefficientToApplyToRow * matrix[resolvingRowIndex][j];
 		}
 
